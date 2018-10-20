@@ -6,7 +6,7 @@ $(document).ready(function () {
         },
         {
             q: "What was the name of the mongoose who protected his family from cobras. Hint his name is an onomatopoeia.",
-            c: ["Akela", "Flunkey", "Winifred", "Rama"],
+            c: ["Rikki-Tikki-Tavi", "Flunkey", "Winifred", "Rama"],
             a: "Rikki-Tikki-Tavi",
         },
         {
@@ -25,16 +25,16 @@ $(document).ready(function () {
             a: "Aslan",
         }
     ];
-    var showQuestion;
-    var count = 0;
-    correctAnswers = 0;
-    incorrectAnswers = 0;
-    unansweredAnswers = 0;
+    let showQuestion;
+    let count = 0;
+    let correctAnswers = 0;
+    let incorrectAnswers = 0;
+    let unansweredQuestions = 5;
+
 
 
     function startGame() {
-        // showQuestion = setInterval(nextQuestion, 2000);
-        nextQuestion();
+        showQuestion = setInterval(nextQuestion, 2000);
     }
 
     function stopGame() {
@@ -49,42 +49,46 @@ $(document).ready(function () {
     function resultsArea() {
         $("#quiz-area").hide();
         $("#start-game-button").hide();
+        $("#correct-answers").text("Correct Answers: " + correctAnswers)
+        $("#incorrect-answers").text("Incorrect Answers: " + incorrectAnswers)
+        $("#unanswered-questions").text("Unanswered questions: " + unansweredQuestions)
         $("#results-area").show();
     }
 
     function nextQuestion() {
-        let currQuestion = Object.values(questions)[count].q;
-        let currOptions = Object.values(questions)[count].c;
-        currAnswers = Object.values(questions)[count].a;
-        $("#question").text(currQuestion);
-        // console.log(Object.values(questions)[count].q)
-        $(".button").empty();
-        $("#quiz-area").show();
-        $("#start-game-button").hide();
-        count++;
         if (count > 4) {
             stopGame();
-        }
-        for (let j = 0; j < currOptions.length; j++) {
-            // console.log(questions.length)
-            var choiceBtn = $("<button>");
-            choiceBtn.addClass("options");
-            choiceBtn.attr("data-letter", currOptions[j]);
-            console.log(currOptions)
-            choiceBtn.text(currOptions[j]);
-            $(".button").append(choiceBtn);
+        } else {
+            let currQuestion = Object.values(questions)[count].q;
+            let currOptions = Object.values(questions)[count].c;
+            currAnswers = Object.values(questions)[count].a;
+            $("#question").text(currQuestion);
+            $(".button").empty();
+            $("#quiz-area").show();
+            $("#start-game-button").hide();
+
+            for (let j = 0; j < currOptions.length; j++) {
+                var choiceBtn = $("<button>");
+                choiceBtn.addClass("options");
+                choiceBtn.attr("data-letter", currOptions[j]);
+                choiceBtn.text(currOptions[j]);
+                $(".button").append(choiceBtn);
+            }
+            count++;
         }
     }
 
     // $(".options").click( function() {
     $(document).on('click', '.options', function () {
         let btnValue = $(this).attr("data-letter")
-        currAnswers = Object.values(questions)[count].a;
+        currAnswers = questions[count - 1].a;
         if (currAnswers === btnValue) {
-            // correctAnswers++;
+            correctAnswers++;
         }
-        console.log(currAnswers)
-        console.log(correctAnswers)
-        console.log($(this) + btnValue)
+        else {
+            incorrectAnswers++;
+        }
+        unansweredQuestions--;
+        console.log(unansweredQuestions)
     })
 })
