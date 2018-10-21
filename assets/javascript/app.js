@@ -30,11 +30,22 @@ $(document).ready(function () {
     let correctAnswers = 0;
     let incorrectAnswers = 0;
     let unansweredQuestions = 5;
+    let timeLeft = 30;
+    let intervalId;
 
+    function run() {
+        clearInterval(intervalId);
+        intervalId = setInterval(decrement, 1000);
+    }
 
+    function decrement() {
+        timeLeft--;
+        $("#time-remaining").html("Time Remaining: " + timeLeft);
+    }
 
     function startGame() {
-        showQuestion = setInterval(nextQuestion, 2000);
+        run();
+        showQuestion = setInterval(nextQuestion, 5000);
     }
 
     function stopGame() {
@@ -43,6 +54,7 @@ $(document).ready(function () {
     }
 
     $("#start-game-button").click(startGame);
+    
 
     $("#stop").click(stopGame);
 
@@ -52,7 +64,7 @@ $(document).ready(function () {
         $("#correct-answers").text("Correct Answers: " + correctAnswers)
         $("#incorrect-answers").text("Incorrect Answers: " + incorrectAnswers)
         $("#unanswered-questions").text("Unanswered questions: " + unansweredQuestions)
-        $("#results-area").show();
+        $("#results-area").show(); 
     }
 
     function nextQuestion() {
@@ -78,17 +90,17 @@ $(document).ready(function () {
         }
     }
 
-    // $(".options").click( function() {
     $(document).on('click', '.options', function () {
         let btnValue = $(this).attr("data-letter")
         currAnswers = questions[count - 1].a;
         if (currAnswers === btnValue) {
             correctAnswers++;
-        }
-        else {
+        } else {
             incorrectAnswers++;
         }
         unansweredQuestions--;
         console.log(unansweredQuestions)
     })
+
+
 })
